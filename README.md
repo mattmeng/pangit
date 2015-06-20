@@ -1,5 +1,7 @@
 # Pangit
 
+[![Build Status](https://travis-ci.org/mattmeng/pangit.svg?branch=development)](https://travis-ci.org/mattmeng/pangit)
+
 A little Sinatra app for playing planning poker in a 21st century manner!
 
 ## Installation
