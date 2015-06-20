@@ -13,9 +13,17 @@ module Pangit
       return @@instance ||= DataStore.new
     end
 
+    def room_exists?( name )
+      return @rooms.select {|k,v| v.name == name}.count > 0
+    end
+
     def add_room( name )
       raise Exceptions::DSRoomAlreadyExists if @rooms.has_key?( name )
       @rooms[name] = Room.new( name )
+    end
+
+    def remove_room( name )
+      @rooms.delete( name )
     end
   end
 
@@ -68,7 +76,8 @@ module Pangit
 
     def add_user( user )
       raise Exceptions::RoomInvalidUser unless user.class == User
-      @users << user unless user_exists?( user )
+      raise Exceptions::RoomUserAlreadyExists if user_exists?( user.name )
+      @users << user
     end
 
     def remove_user( user )

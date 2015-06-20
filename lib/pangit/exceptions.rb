@@ -9,5 +9,6 @@ module Pangit
 		class UserSessionIDInvalid < PangitException; end
 
 		class RoomInvalidUser < PangitException; end
+		class RoomUserAlreadyExists < PangitException; end
 	end
 end
