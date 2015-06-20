@@ -5,4 +5,4 @@ before_install: gem install bundler -v 1.10.1
 install:
   - bundle install --path vendor/bundle
 script:
-  - bundle exec rake spec
+  - bundle exec rake spec -f p
