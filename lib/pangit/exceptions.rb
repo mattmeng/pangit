@@ -3,14 +3,13 @@ module Pangit
 		class PangitException < StandardError; end
 
 		# Data Store Exceptions
-		class DSRoomAlreadyExists < PangitException; end
-		class DSUserAlreadyExists < PangitException; end
+		class DataStoreInvalidKey < PangitException; end
+		class DataStoreInvalidStore < PangitException; end
+		class DataStoreAlreadyExists < PangitException; end
 
-		class UserNameInvalid < PangitException; end
-		class UserSessionIDInvalid < PangitException; end
-
-		class RoomNameInvalid < PangitException; end
-		class RoomInvalidUser < PangitException; end
-		class RoomUserAlreadyExists < PangitException; end
+    # Users Exceptions
+    class UserSessionIDAlreadyExists < PangitException; end
+    class UserNameInvalid < PangitException; end
+    class UserSessionIDInvalid < PangitException; end
 	end
 end

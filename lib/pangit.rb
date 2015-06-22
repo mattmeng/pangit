@@ -1,6 +1,6 @@
 require 'pangit/constants'
 require 'pangit/exceptions'
-require 'pangit/data_store'
+require 'pangit/models'
 
 module Pangit
   # Your code goes here...
