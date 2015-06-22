@@ -12,40 +12,27 @@ describe Pangit::DataStore do
     expect( Pangit::DataStore.instance.object_id ).to eq( Pangit::DataStore.instance.object_id )
   end
 
-  describe '.room_exists?' do
-    it( 'can check if a room exists already' ) do
-      test_name = @name + '_exists'
-      data_store.add_room( test_name )
-      expect( data_store.room_exists?( test_name ) ).to be( true )
-    end
-
-    it( 'can check if a user does not exist' ) do
-      expect( data_store.room_exists?( @name + '_blah' ) ).to be( false )
-    end
-  end
-
   describe '.add_room' do
-    it( 'adds a user' ) do
-      data_store.add_room( @name )
-      expect( data_store.rooms[@name] ).not_to eq( nil )
+    it( 'adds a room' ) do
+      test_name = 'test_add'
+      data_store.add_room( test_name )
+      expect( data_store.rooms[test_name.to_sym] ).not_to eq( nil )
     end
 
     it( 'errors if room already exists' ) do
-      test_name = @name + '_add'
+      test_name = 'test_add_exists'
       data_store.add_room( test_name )
       expect { data_store.add_room( test_name ) }.to raise_error( Pangit::Exceptions::DSRoomAlreadyExists )
     end
-
-    # it( 'errors on invalid room name' ) { expect { data_store.add_user( user_name, session_id, '' ) }.to raise_error( Pangit::Exceptions::DSRoomDoesntExist ) }
   end
 
   describe '.remove_room' do
     it( 'can delete rooms' ) do
-      test_name = @name + '_remove'
+      test_name = 'test_remove'
       data_store.add_room( test_name )
-      expect( data_store.rooms.has_key?( test_name ) ).to be( true )
+      expect( data_store.rooms.has_key?( test_name.to_sym ) ).to be( true )
       data_store.remove_room( test_name )
-      expect( data_store.rooms.include?( test_name ) ).to be( false )
+      expect( data_store.rooms.has_key?( test_name.to_sym ) ).to be( false )
     end
   end
 end
@@ -107,8 +94,9 @@ describe Pangit::Room do
 
   describe '.user_exists?' do
     it( 'can check if a user exists already' ) do
-      room.add_user( Pangit::User.new( @name, @name ) )
-      expect( room.user_exists?( @name ) ).to be( true )
+      user = :test_exists
+      room.add_user( user )
+      expect( room.user_exists?( user ) ).to be( true )
     end
 
     it( 'can check if a user does not exist' ) do
@@ -119,21 +107,21 @@ describe Pangit::Room do
   describe '.add_user' do
     it( 'errors on invalid user' ) { expect { room.add_user( @name ) }.to raise_error( room_invalid_user ) }
     it( 'errors on duplicate user' ) do
-      user = Pangit::User.new( @name + '_duplicate', @name + '_duplicate_session_id' )
+      user = :test_duplicate
       room.add_user( user )
       expect { room.add_user( user ) }.to raise_error( room_user_already_exists )
     end
 
     it( 'can add users' ) do
-      user = Pangit::User.new( @name, @name )
+      user = :test_add
       room.add_user( user )
       expect( room.users.include?( user ) ).to be( true )
     end
   end
 
   describe '.remove_user' do
-    it( 'can delete users' ) do
-      user = Pangit::User.new( @name, @name )
+    it( 'can remove users' ) do
+      user = :test_remove
       room.add_user( user )
       expect( room.users.include?( user ) ).to be( true )
       room.remove_user( user )
