@@ -17,8 +17,8 @@ module Pangit
         return session_id
       end
 
-      def self.[]
-
+      def self.[]( key )
+        return STORE[STORE_KEY][key]
       end
     end
 

@@ -1,18 +1,28 @@
 require 'pangit/models/users'
 
 describe Pangit::Models::Users do
-  before( :all ) do
-    Pangit::DataStore.class_variable_set( :@@instance, nil )
+  before( :each ) do
+    Pangit::DataStore.instance.instance_variable_set( :@store, {} )
     Pangit::Models::Users.register
   end
 
   let( :name ) { 'Matt Meng' }
   let( :session_id ) { '4' }
+  let( :users ) { Pangit::Models::Users }
+  let( :user_session_id_already_exists ) { Pangit::Exceptions::UserSessionIDAlreadyExists }
 
   describe '.add_user' do
     it( 'errors if a session id already exists' ) do
-      Pangit::Models::Users.add_user( name, session_id )
-      expect { Pangit::Models::Users.add_user( name, session_id ) }.to raise_error( Pangit::Exceptions::UserSessionIDAlreadyExists )
+      users.add_user( name, session_id )
+      expect { users.add_user( name, session_id ) }.to raise_error( user_session_id_already_exists )
+    end
+  end
+
+  describe '[]' do
+    it( 'returns nil if no value exists' ) { expect( users[name] ).to be_nil }
+    it( 'returns value' ) do
+      users.add_user( name, session_id )
+      expect( users[session_id] ).not_to be_nil
     end
   end
 end
