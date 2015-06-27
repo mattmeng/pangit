@@ -11,5 +11,11 @@ module Pangit
     class UserSessionIDAlreadyExists < PangitException; end
     class UserNameInvalid < PangitException; end
     class UserSessionIDInvalid < PangitException; end
+
+    # Rooms Exceptions
+    class RoomIDAlreadyExists < PangitException; end
+		class RoomIDInvalid < PangitException; end
+		class RoomNameInvalid < PangitException; end
+		class RoomInvalidUser < PangitException; end
 	end
 end

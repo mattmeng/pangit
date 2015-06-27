@@ -22,42 +22,4 @@ module Pangit
       return @store[key]
     end
   end
-
-  # class Room
-  #   attr_reader :name
-  #   attr_reader :users
-
-  #   def initialize( name )
-  #     @name = name
-  #     @config = {}
-  #     @users = []
-  #   end
-
-  #   def name=( name )
-  #     raise Exceptions::RoomNameInvalid unless name and name.strip != ''
-  #     @name = name
-  #   end
-
-  #   def []( key )
-  #     return @config[key]
-  #   end
-
-  #   def []=( key, value )
-  #     @config[key] = value
-  #   end
-
-  #   def user_exists?( name )
-  #     return @users.select {|v| v == name}.count > 0
-  #   end
-
-  #   def add_user( user )
-  #     raise Exceptions::RoomInvalidUser unless user.class == Symbol
-  #     raise Exceptions::RoomUserAlreadyExists if user_exists?( user )
-  #     @users << user
-  #   end
-
-  #   def remove_user( user )
-  #     @users.delete( user )
-  #   end
-  # end
 end

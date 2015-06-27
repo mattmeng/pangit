@@ -31,7 +31,8 @@ end
 describe Pangit::Models::User do
   let( :name ) { 'test' }
   let( :session_id ) { '4' }
-  let( :user ) { Pangit::Models::User.new( name, session_id ) }
+  let( :user ) { Pangit::Models::User }
+  let( :test_user ) { user.new( name, session_id ) }
 
   describe '#name' do
     let( :name_nil ) { nil }
@@ -39,14 +40,14 @@ describe Pangit::Models::User do
     let( :name_blank ) { ' ' }
     let( :user_invalid_exc ) { Pangit::Exceptions::UserNameInvalid }
 
-    it( 'has a name' ) { expect( user.name ).to eq( name ) }
+    it( 'has a name' ) { expect( test_user.name ).to eq( name ) }
     it( 'errors on invalid name' ) do
-      expect { Pangit::Models::User.new( name_nil, session_id ) }.to raise_error( user_invalid_exc )
-      expect { Pangit::Models::User.new( name_number, session_id ) }.to raise_error( user_invalid_exc )
-      expect { Pangit::Models::User.new( name_blank, session_id ) }.to raise_error( user_invalid_exc )
-      expect { user.name = name_nil }.to raise_error( user_invalid_exc )
-      expect { user.name = name_number }.to raise_error( user_invalid_exc )
-      expect { user.name = name_blank }.to raise_error( user_invalid_exc )
+      expect { user.new( name_nil, session_id ) }.to raise_error( user_invalid_exc )
+      expect { user.new( name_number, session_id ) }.to raise_error( user_invalid_exc )
+      expect { user.new( name_blank, session_id ) }.to raise_error( user_invalid_exc )
+      expect { test_user.name = name_nil }.to raise_error( user_invalid_exc )
+      expect { test_user.name = name_number }.to raise_error( user_invalid_exc )
+      expect { test_user.name = name_blank }.to raise_error( user_invalid_exc )
     end
   end
 
@@ -56,11 +57,11 @@ describe Pangit::Models::User do
     let( :session_id_blank ) { ' ' }
     let( :session_id_invalid_exc ) { Pangit::Exceptions::UserSessionIDInvalid }
 
-    it( 'has an id' ) { expect( user.id ).to eq( session_id ) }
+    it( 'has an id' ) { expect( test_user.id ).to eq( session_id ) }
     it( 'errors on invalid session_id' ) do
-      expect { Pangit::Models::User.new( name, session_id_nil ) }.to raise_error( session_id_invalid_exc )
-      expect { Pangit::Models::User.new( name, session_id_number ) }.to raise_error( session_id_invalid_exc )
-      expect { Pangit::Models::User.new( name, session_id_blank ) }.to raise_error( session_id_invalid_exc )
+      expect { user.new( name, session_id_nil ) }.to raise_error( session_id_invalid_exc )
+      expect { user.new( name, session_id_number ) }.to raise_error( session_id_invalid_exc )
+      expect { user.new( name, session_id_blank ) }.to raise_error( session_id_invalid_exc )
     end
   end
 end

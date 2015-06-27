@@ -33,8 +33,8 @@ module Pangit
       end
 
       def name=( name )
-        raise Exceptions::UserNameInvalid unless name =~ /^[A-Za-z0-9\s.,]+$/ and name.strip != ''
-        @name = name.strip
+        raise Exceptions::UserNameInvalid unless name =~ /^[A-Za-z0-9\s.,]+$/ and name.strip! != ''
+        @name = name
       end
     end
   end
