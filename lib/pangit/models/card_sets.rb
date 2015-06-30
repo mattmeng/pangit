@@ -39,7 +39,7 @@ module Pangit
         raise Exceptions::CardSetIDInvalid unless id.is_a? Symbol
         @id = id
         self.name = name
-        self.cards = {}
+        self.cards = cards
       end
 
       def name=( name )
@@ -54,6 +54,10 @@ module Pangit
           raise Exceptions::CardSetInvalidNameType unless value.is_a? String
         end
         @cards = cards
+      end
+
+      def valid?( card )
+        return @cards.include?( card )
       end
 
       # def add_room( room_id, add_me_to_room = true )

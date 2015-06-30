@@ -4,6 +4,7 @@ describe Pangit::Models::CardSet do
   let( :id ) { :test }
   let( :name ) { 'valid' }
   let( :card_set ) { {} }
+  let( :valid_cards ) { {x: 'a', y: 'b', z: 'c'} }
   let( :card ) { Pangit::Models::CardSet }
   let( :test_card ) { card.new( id, name, card_set ) }
 
@@ -36,7 +37,6 @@ describe Pangit::Models::CardSet do
   end
 
   describe '#cards' do
-    let( :valid_cards ) { {x: 'a', y: 'b', z: 'c'} }
     let( :invalid_card_type ) { 'string' }
     let( :invalid_id_type )   { {'string' => 'string'} }
     let( :invalid_name_type ) { {test: :test} }
@@ -54,5 +54,12 @@ describe Pangit::Models::CardSet do
       test_card.cards = valid_cards
       expect( test_card.cards ).to eq( valid_cards )
     end
+  end
+
+  describe '.valid?' do
+    let( :valid_card_set ) { card.new( id, name, valid_cards ) }
+
+    it( 'returns false on invalid card' ) { expect( valid_card_set.valid?( :m ) ).to be( false ) }
+    it( 'returns true on valid card' ) { expect( valid_card_set.valid?( :z ) ).to be( true ) }
   end
 end
