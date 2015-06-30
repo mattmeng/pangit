@@ -1,5 +1,6 @@
 require 'pangit/exceptions'
 require 'pangit/data_store'
+require 'pangit/models/rooms'
 
 module Pangit
   module Models
@@ -25,16 +26,22 @@ module Pangit
     class User
       attr_reader :id   # Session ID
       attr_reader :name
+      attr_reader :rooms
 
       def initialize( name, session_id )
         raise Exceptions::UserSessionIDInvalid unless session_id.is_a? String and session_id.strip != ''
         @id = session_id
         self.name = name
+        @rooms = []
       end
 
       def name=( name )
-        raise Exceptions::UserNameInvalid unless name =~ /^[A-Za-z0-9\s.,]+$/ and name.strip! != ''
+        raise Exceptions::UserNameInvalid unless name =~ /^[A-Za-z0-9\s.,_-]+$/ and name.strip! != ''
         @name = name
+      end
+
+      def add_room( room_id )
+        raise Exceptions::RoomIDInvalid unless Rooms
       end
     end
   end

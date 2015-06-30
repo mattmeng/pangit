@@ -20,6 +20,10 @@ module Pangit
       def self.[]( key )
         return STORE[STORE_KEY][key]
       end
+
+      def self.exists?( key )
+        return STORE[STORE_KEY].has_key?( key )
+      end
     end
 
     class Room
@@ -35,7 +39,7 @@ module Pangit
       end
 
       def name=( name )
-        raise Exceptions::RoomNameInvalid unless name =~ /^[A-Za-z0-9\s.,]+$/ and name.strip! != ''
+        raise Exceptions::RoomNameInvalid unless name =~ /^[A-Za-z0-9\s.,_-]+$/ and name.strip! != ''
         @name = name
       end
 
