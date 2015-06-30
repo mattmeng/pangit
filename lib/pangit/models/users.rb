@@ -14,8 +14,12 @@ module Pangit
 
       def self.add_user( name, session_id )
         raise Exceptions::UserSessionIDAlreadyExists if STORE[STORE_KEY].has_key?( session_id )
-        STORE[STORE_KEY][session_id] = User.new( name, session_id )
-        return session_id
+        return STORE[STORE_KEY][session_id] = User.new( name, session_id )
+      end
+
+      def self.remove_user( id )
+        STORE[STORE_KEY][id].rooms.each {|room| Rooms[room].remove_user( id )}
+        return STORE[STORE_KEY].delete( id )
       end
 
       def self.[]( key )
@@ -50,6 +54,10 @@ module Pangit
           @rooms << room_id
           Rooms[room_id].add_user( @id, false ) if add_me_to_room
         end
+      end
+
+      def remove_room( room )
+        @rooms.delete( room )
       end
     end
   end

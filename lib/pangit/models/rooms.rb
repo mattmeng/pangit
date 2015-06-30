@@ -1,5 +1,6 @@
 require 'pangit/exceptions'
 require 'pangit/data_store'
+require 'pangit/models/users'
 
 module Pangit
   module Models
@@ -13,16 +14,20 @@ module Pangit
 
       def self.add_room( id, name )
         raise Exceptions::RoomIDAlreadyExists if STORE[STORE_KEY].has_key?( id )
-        STORE[STORE_KEY][id] = Room.new( id, name )
-        return id
+        return STORE[STORE_KEY][id] = Room.new( id, name )
       end
 
-      def self.[]( key )
-        return STORE[STORE_KEY][key]
+      def self.remove_room( id )
+        STORE[STORE_KEY][id].users.each {|user| Users[user].remove_room( id )}
+        return STORE[STORE_KEY].delete( id )
       end
 
-      def self.exists?( key )
-        return STORE[STORE_KEY].has_key?( key )
+      def self.[]( id )
+        return STORE[STORE_KEY][id]
+      end
+
+      def self.exists?( id )
+        return STORE[STORE_KEY].has_key?( id )
       end
     end
 

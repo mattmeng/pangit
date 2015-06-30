@@ -13,13 +13,44 @@ describe Pangit::Models::Rooms do
   end
 
   describe '.add_room' do
+    let( :existing_room ) { :existing_room }
     let( :room_id_already_exists ) { Pangit::Exceptions::RoomIDAlreadyExists }
 
+    it( 'adds a room' ) do
+      expect( rooms.add_room( id, name ) ).to be_kind_of( Pangit::Models::Room )
+      expect( rooms[id] ).not_to be_nil
+    end
     it( 'errors if an id already exists' ) do
-      rooms.add_room( id, name )
-      expect { rooms.add_room( id, name ) }.to raise_error( room_id_already_exists )
+      rooms.add_room( existing_room, existing_room.to_s )
+      expect { rooms.add_room( existing_room, existing_room.to_s ) }.to raise_error( room_id_already_exists )
     end
   end
+
+  describe '.remove_room' do
+    let( :user1 ) { 'user1' }
+    let( :user2 ) { 'user2' }
+    let( :users ) { Pangit::Models::Users }
+    it( 'removes a room from Rooms and all users' ) do
+      test_room = rooms.add_room( id, name )
+      test_user1 = users.add_user( user1, user1 )
+      test_user2 = users.add_user( user2, user2 )
+      test_user1.add_room( id )
+      test_user2.add_room( id )
+
+      expect( test_user1.rooms ).to include( id )
+      expect( test_user2.rooms ).to include( id )
+
+      rooms.remove_room( id )
+      expect( test_user1.rooms ).not_to include( id )
+      expect( test_user2.rooms ).not_to include( id )
+      expect( rooms[id] ).to be_nil
+    end
+  end
+
+  def self.remove_room( id )
+        STORE[STORE_KEY][id].users.each {|user| user.remove_room( id )}
+        return STORE[STORE_KEY].delete( id )
+      end
 
   describe '[]' do
     it( 'returns nil if no value exists' ) { expect( rooms[name] ).to be_nil }

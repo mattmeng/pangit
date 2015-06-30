@@ -9,6 +9,7 @@ describe Pangit::Models::Users do
   before( :each ) do
     Pangit::DataStore.instance.instance_variable_set( :@store, {} )
     Pangit::Models::Users.register
+    Pangit::Models::Rooms.register
   end
 
   describe '.add_user' do
@@ -17,6 +18,27 @@ describe Pangit::Models::Users do
     it( 'errors if a session id already exists' ) do
       users.add_user( name, session_id )
       expect { users.add_user( name, session_id ) }.to raise_error( user_session_id_already_exists )
+    end
+  end
+
+  describe '.remove_user' do
+    let( :room1 ) { :user1 }
+    let( :room2 ) { :user2 }
+    let( :rooms ) { Pangit::Models::Rooms }
+    it( 'removes a user from Users and all rooms' ) do
+      test_user = users.add_user( name, session_id )
+      test_room1 = rooms.add_room( room1, room1.to_s )
+      test_room2 = rooms.add_room( room2, room2.to_s )
+      test_room1.add_user( session_id )
+      test_room2.add_user( session_id )
+
+      expect( test_room1.users ).to include( session_id )
+      expect( test_room2.users ).to include( session_id )
+
+      users.remove_user( session_id )
+      expect( test_room1.users ).not_to include( session_id )
+      expect( test_room2.users ).not_to include( session_id )
+      expect( users[session_id] ).to be_nil
     end
   end
 
