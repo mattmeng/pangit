@@ -43,9 +43,12 @@ module Pangit
         @name = name
       end
 
-      def add_user( user )
-        raise Exceptions::RoomInvalidUser unless user.class == Symbol
-        @users << user unless users.include?( user )
+      def add_user( user_id, add_me_to_user = true )
+        raise Exceptions::RoomInvalidUser unless Users.exists?( user_id )
+        unless users.include?( user_id )
+          @users << user_id
+          Users[user_id].add_room( @id, false ) if add_me_to_user
+        end
       end
 
       def remove_user( user )

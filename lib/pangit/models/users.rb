@@ -21,6 +21,10 @@ module Pangit
       def self.[]( key )
         return STORE[STORE_KEY][key]
       end
+
+      def self.exists?( key )
+        return STORE[STORE_KEY].has_key?( key )
+      end
     end
 
     class User
@@ -40,8 +44,12 @@ module Pangit
         @name = name
       end
 
-      def add_room( room_id )
-        raise Exceptions::RoomIDInvalid unless Rooms
+      def add_room( room_id, add_me_to_room = true )
+        raise Exceptions::RoomIDInvalid unless Rooms.exists?( room_id )
+        unless @rooms.include?( room_id )
+          @rooms << room_id
+          Rooms[room_id].add_user( @id, false ) if add_me_to_room
+        end
       end
     end
   end

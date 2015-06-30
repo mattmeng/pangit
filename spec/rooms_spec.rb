@@ -1,14 +1,16 @@
 require 'pangit/models/rooms'
+require 'pangit/models/users'
 
 describe Pangit::Models::Rooms do
-  before( :each ) do
-    Pangit::DataStore.instance.instance_variable_set( :@store, {} )
-    Pangit::Models::Rooms.register
-  end
-
   let( :id ) { :test }
   let( :name ) { 'Matt Meng' }
   let( :rooms ) { Pangit::Models::Rooms }
+
+  before( :each ) do
+    Pangit::DataStore.instance.instance_variable_set( :@store, {} )
+    Pangit::Models::Rooms.register
+    Pangit::Models::Users.register
+  end
 
   describe '.add_room' do
     let( :room_id_already_exists ) { Pangit::Exceptions::RoomIDAlreadyExists }
@@ -40,9 +42,19 @@ end
 describe Pangit::Models::Room do
   let( :id ) { :test }
   let( :name ) { 'test' }
+  let( :user_name ) { 'user' }
   let( :room ) { Pangit::Models::Room }
-  let( :user ) { :user }
-  let( :test_room ) { room.new( id, name ) }
+  let( :test_room ) do
+    return Pangit::Models::Rooms[id]
+  end
+  let( :users ) { Pangit::Models::Users }
+
+  before( :each ) do
+    Pangit::DataStore.instance.instance_variable_set( :@store, {} )
+    Pangit::Models::Rooms.register
+    Pangit::Models::Users.register
+    Pangit::Models::Rooms.add_room( id, name )
+  end
 
   describe '#id' do
     let( :id_nil ) { nil }
@@ -76,16 +88,19 @@ describe Pangit::Models::Room do
   end
 
   describe '.add_user' do
-    let( :existing_user ) { :existing_user }
-    let( :invalid_user ) { 'test' }
+    let( :existing_user ) { 'existing_user' }
+    let( :invalid_user ) { :invalid_user }
     let( :room_invalid_user ) { Pangit::Exceptions::RoomInvalidUser }
 
     it( 'adds a new user' ) do
-      test_room.add_user( user )
-      expect( test_room.users.select {|v| v == user}.count ).to be( 1 )
+      users.add_user( user_name, user_name )
+      test_room.add_user( user_name )
+      expect( test_room.users.select {|v| v == user_name}.count ).to be( 1 )
+      expect( users[user_name].rooms ).to include( id )
     end
     it( 'errors on invalid user' ) { expect { test_room.add_user( invalid_user ) }.to raise_error( room_invalid_user ) }
     it( "doesn't add existing user" ) do
+      users.add_user( existing_user, existing_user )
       test_room.add_user( existing_user )
       test_room.add_user( existing_user )
       expect( test_room.users.select {|v| v == existing_user}.count ).to be( 1 )
@@ -94,10 +109,11 @@ describe Pangit::Models::Room do
 
   describe '.remove_user' do
     it( 'removes a user' ) do
-      test_room.add_user( user )
-      expect( test_room.users.select {|v| v == user}.count ).to be( 1 )
-      test_room.remove_user( user )
-      expect( test_room.users.select {|v| v == user}.count ).to be( 0 )
+      users.add_user( user_name, user_name )
+      test_room.add_user( user_name )
+      expect( test_room.users.select {|v| v == user_name}.count ).to be( 1 )
+      test_room.remove_user( user_name )
+      expect( test_room.users.select {|v| v == user_name}.count ).to be( 0 )
     end
   end
 end
