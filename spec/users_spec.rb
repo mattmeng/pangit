@@ -52,6 +52,7 @@ describe Pangit::Models::Users do
 
   describe '.exists?' do
     let( :no_id ) { 'no_id' }
+
     it( 'returns false if none' ) { expect( users.exists?( no_id ) ).to be( false ) }
     it( 'returns true if found' ) do
       users.add_user( no_id, no_id )

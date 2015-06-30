@@ -1,5 +1,44 @@
 require 'pangit/models/card_sets'
 
+describe Pangit::Models::CardSets do
+  let( :id ) { :fibonacci }
+  let( :name ) { 'Fibonacci Sequence' }
+  let( :valid_cards ) { {num_1: '1', num_2: '2', num_3: '3', num_5: '5'} }
+  let( :cards ) { Pangit::Models::CardSets }
+
+  before( :each ) do
+    Pangit::DataStore.instance.instance_variable_set( :@store, {} )
+    Pangit::Models::CardSets.register
+  end
+
+  describe '.add_card_set' do
+    let( :card_set_id_already_exists ) { Pangit::Exceptions::CardSetIDAlreadyExists }
+
+    it( 'errors if an id already exists' ) do
+      cards.add_card_set( id, name, valid_cards )
+      expect { cards.add_card_set( id, name, valid_cards ) }.to raise_error( card_set_id_already_exists )
+    end
+  end
+
+  describe '[]' do
+    it( 'returns nil if no value exists' ) { expect( cards[id] ).to be_nil }
+    it( 'returns value' ) do
+      cards.add_card_set( id, name, valid_cards )
+      expect( cards[id] ).not_to be_nil
+    end
+  end
+
+  describe '.exists?' do
+    let( :no_id ) { :no_id }
+
+    it( 'returns false if none' ) { expect( cards.exists?( no_id ) ).to be( false ) }
+    it( 'returns true if found' ) do
+      cards.add_card_set( id, name, valid_cards )
+      expect( cards.exists?( id ) ).to be( true )
+    end
+  end
+end
+
 describe Pangit::Models::CardSet do
   let( :id ) { :test }
   let( :name ) { 'valid' }
@@ -10,8 +49,7 @@ describe Pangit::Models::CardSet do
 
   before( :each ) do
     Pangit::DataStore.instance.instance_variable_set( :@store, {} )
-    # Pangit::Models::Rooms.register
-    # Pangit::Models::Users.register
+    Pangit::Models::CardSets.register
   end
 
   describe '#name' do

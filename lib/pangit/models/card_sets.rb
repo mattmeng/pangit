@@ -3,32 +3,27 @@ require 'pangit/data_store'
 
 module Pangit
   module Models
-    # class CardSets
-    #   STORE = Pangit::DataStore.instance
-    #   STORE_KEY = :card_sets
+    class CardSets
+      STORE = Pangit::DataStore.instance
+      STORE_KEY = :card_sets
 
-    #   def self.register
-    #     STORE.add_store( STORE_KEY, {} )
-    #   end
+      def self.register
+        STORE.add_store( STORE_KEY, {} )
+      end
 
-    #   def self.add_card_set( name, session_id )
-    #     raise Exceptions::UserSessionIDAlreadyExists if STORE[STORE_KEY].has_key?( session_id )
-    #     return STORE[STORE_KEY][session_id] = User.new( name, session_id )
-    #   end
+      def self.add_card_set( id, name, cards )
+        raise Exceptions::CardSetIDAlreadyExists if STORE[STORE_KEY].has_key?( id )
+        return STORE[STORE_KEY][id] = CardSet.new( id, name, cards )
+      end
 
-    #   def self.remove_user( id )
-    #     STORE[STORE_KEY][id].rooms.each {|room| Rooms[room].remove_user( id )}
-    #     return STORE[STORE_KEY].delete( id )
-    #   end
+      def self.[]( key )
+        return STORE[STORE_KEY][key]
+      end
 
-    #   def self.[]( key )
-    #     return STORE[STORE_KEY][key]
-    #   end
-
-    #   def self.exists?( key )
-    #     return STORE[STORE_KEY].has_key?( key )
-    #   end
-    # end
+      def self.exists?( key )
+        return STORE[STORE_KEY].has_key?( key )
+      end
+    end
 
     class CardSet
       attr_reader :id
@@ -59,20 +54,8 @@ module Pangit
       def valid?( card )
         return @cards.include?( card )
       end
-
-      # def add_room( room_id, add_me_to_room = true )
-      #   raise Exceptions::RoomIDInvalid unless Rooms.exists?( room_id )
-      #   unless @rooms.include?( room_id )
-      #     @rooms << room_id
-      #     Rooms[room_id].add_user( @id, false ) if add_me_to_room
-      #   end
-      # end
-
-      # def remove_room( room )
-      #   @rooms.delete( room )
-      # end
     end
   end
 end
 
-# Pangit::Models::Users.register
+Pangit::Models::CardSets.register

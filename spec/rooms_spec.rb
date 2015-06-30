@@ -62,6 +62,7 @@ describe Pangit::Models::Rooms do
 
   describe '.exists?' do
     let( :no_id ) { :no_id }
+
     it( 'returns false if none' ) { expect( rooms.exists?( no_id ) ).to be( false ) }
     it( 'returns true if found' ) do
       rooms.add_room( no_id, no_id.to_s )
