@@ -91,6 +91,7 @@ describe Pangit::Models::User do
   end
 
   describe '#name' do
+    let( :new_name ) { name + '_new' }
     let( :name_nil ) { nil }
     let( :name_number ) { 4 }
     let( :name_blank ) { ' ' }
@@ -104,6 +105,10 @@ describe Pangit::Models::User do
       expect { test_user.name = name_nil }.to raise_error( user_invalid_exc )
       expect { test_user.name = name_number }.to raise_error( user_invalid_exc )
       expect { test_user.name = name_blank }.to raise_error( user_invalid_exc )
+    end
+    it( 'sets a name' ) do
+      test_user.name = new_name
+      expect( test_user.name ).to eq( new_name )
     end
   end
 

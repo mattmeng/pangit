@@ -22,5 +22,6 @@ module Pangit
     class CardSetInvalidType < PangitException; end
     class CardSetInvalidIDType < PangitException; end
     class CardSetInvalidNameType < PangitException; end
+    class CardSetNameInvalid < PangitException; end
 	end
 end

@@ -35,17 +35,17 @@ module Pangit
       attr_reader :name
       attr_reader :cards
 
-      # def initialize( id, name, cards )
-      #   raise Exceptions::UserSessionIDInvalid unless session_id.is_a? String and session_id.strip != ''
-      #   @id = session_id
-      #   self.name = name
-      #   @rooms = []
-      # end
+      def initialize( id, name, cards )
+        raise Exceptions::CardSetIDInvalid unless id.is_a? Symbol
+        @id = id
+        self.name = name
+        self.cards = {}
+      end
 
-      # def name=( name )
-      #   raise Exceptions::UserNameInvalid unless name =~ /^[A-Za-z0-9\s.,_-]+$/ and name.strip! != ''
-      #   @name = name
-      # end
+      def name=( name )
+        raise Exceptions::CardSetNameInvalid unless name =~ /^[A-Za-z0-9\s.,_-]+$/ and name.strip! != ''
+        @name = name
+      end
 
       def cards=( cards )
         raise Exceptions::CardSetInvalidType unless cards.is_a? Hash
