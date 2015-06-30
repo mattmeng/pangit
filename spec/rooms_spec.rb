@@ -17,7 +17,7 @@ describe Pangit::Models::Rooms do
     let( :room_id_already_exists ) { Pangit::Exceptions::RoomIDAlreadyExists }
 
     it( 'adds a room' ) do
-      expect( rooms.add_room( id, name ) ).to be_kind_of( Pangit::Models::Room )
+      expect( rooms.add_room( id, name ) ).to be_a( Pangit::Models::Room )
       expect( rooms[id] ).not_to be_nil
     end
     it( 'errors if an id already exists' ) do

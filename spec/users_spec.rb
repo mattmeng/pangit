@@ -108,7 +108,7 @@ describe Pangit::Models::User do
   end
 
   describe '#rooms' do
-    it( 'has rooms that is an Array' ) { expect( test_user.rooms ).to be_kind_of( Array ) }
+    it( 'has rooms that is an Array' ) { expect( test_user.rooms ).to be_a( Array ) }
   end
 
   describe '.add_room' do

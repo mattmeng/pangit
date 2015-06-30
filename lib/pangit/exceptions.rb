@@ -17,5 +17,10 @@ module Pangit
 		class RoomIDInvalid < PangitException; end
 		class RoomNameInvalid < PangitException; end
 		class RoomInvalidUser < PangitException; end
+
+    # CardSet Exceptions
+    class CardSetInvalidType < PangitException; end
+    class CardSetInvalidIDType < PangitException; end
+    class CardSetInvalidNameType < PangitException; end
 	end
 end
