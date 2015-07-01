@@ -1,6 +1,7 @@
 require 'pangit/exceptions'
 require 'pangit/data_store'
 require 'pangit/models/users'
+require 'pangit/models/card_sets'
 
 module Pangit
   module Models
@@ -35,6 +36,7 @@ module Pangit
       attr_reader :id
       attr_reader :name
       attr_reader :users
+      attr_reader :card_set
 
       def initialize( id, name )
         raise Exceptions::RoomIDInvalid unless id.is_a? Symbol
@@ -58,6 +60,11 @@ module Pangit
 
       def remove_user( user )
         @users.delete( user )
+      end
+
+      def card_set=( card_set )
+        raise Exceptions::CardSetIDInvalid unless CardSets.exists?( card_set )
+        return @card_set = card_set
       end
     end
   end

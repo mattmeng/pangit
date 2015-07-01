@@ -1,5 +1,6 @@
 require 'pangit/models/rooms'
 require 'pangit/models/users'
+require 'pangit/models/card_sets'
 
 describe Pangit::Models::Rooms do
   let( :id ) { :test }
@@ -85,6 +86,7 @@ describe Pangit::Models::Room do
     Pangit::DataStore.instance.instance_variable_set( :@store, {} )
     Pangit::Models::Rooms.register
     Pangit::Models::Users.register
+    Pangit::Models::CardSets.register
     Pangit::Models::Rooms.add_room( id, name )
   end
 
@@ -116,6 +118,24 @@ describe Pangit::Models::Room do
       expect { test_room.name = name_nil }.to raise_error( room_name_invalid_exc )
       expect { test_room.name = name_number }.to raise_error( room_name_invalid_exc )
       expect { test_room.name = name_blank }.to raise_error( room_name_invalid_exc )
+    end
+  end
+
+  describe '#card_set' do
+    let( :card_sets ) { Pangit::Models::CardSets }
+    let( :card_set_id ) { :fibonacci }
+    let( :card_set_name ) { 'Fibonacci' }
+    let( :card_set_cards ) { {x: 'x', y: 'y', z: 'z'} }
+    let( :card_set_id_invalid ) { Pangit::Exceptions::CardSetIDInvalid }
+
+    it( 'sets a valid card set' ) do
+      card_set = card_sets.add_card_set( card_set_id, card_set_name, card_set_cards )
+      test_room.card_set = card_set_id
+      expect( test_room.card_set ).to eq( card_set_id )
+    end
+
+    it( 'errors on invalid card set' ) do
+      expect { test_room.card_set = card_set_id.to_s }.to raise_error( card_set_id_invalid )
     end
   end
 
