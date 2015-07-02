@@ -203,4 +203,21 @@ describe Pangit::Models::Room do
       expect( test_room.choices[user_id] ).to be( card_id )
     end
   end
+
+  describe '.clear_choices' do
+    let( :user_id ) { 'user_id' }
+    let( :card_id ) { :card_id }
+    let( :card_set ) { {card_id: 'card_id'} }
+
+    it( 'clears all choices' ) do
+      Pangit::Models::Users.add_user( user_id, user_id )
+      test_room.add_user( user_id )
+      Pangit::Models::CardSets.add_card_set( card_id, card_id.to_s, card_set )
+      test_room.card_set = card_id
+      test_room.choose_card( user_id, card_id )
+      expect( test_room.choices[user_id] ).to be( card_id )
+      test_room.clear_choices()
+      expect( test_room.choices ).to be_empty
+    end
+  end
 end

@@ -44,7 +44,7 @@ module Pangit
         @id = id
         self.name = name
         @users = []
-        @choices = {}
+        self.clear_choices
       end
 
       def name=( name )
@@ -73,6 +73,10 @@ module Pangit
         raise Exceptions::UserInvalid unless Users.exists?( user_id ) and @users.include?( user_id )
         raise Exceptions::CardInvalid unless CardSets.exists?( @card_set ) and CardSets[@card_set].valid?( card_id )
         @choices[user_id] = card_id
+      end
+
+      def clear_choices
+        @choices = {}
       end
     end
   end
