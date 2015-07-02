@@ -37,12 +37,14 @@ module Pangit
       attr_reader :name
       attr_reader :users
       attr_reader :card_set
+      attr_reader :choices
 
       def initialize( id, name )
         raise Exceptions::RoomIDInvalid unless id.is_a? Symbol
         @id = id
         self.name = name
         @users = []
+        @choices = {}
       end
 
       def name=( name )
@@ -51,7 +53,7 @@ module Pangit
       end
 
       def add_user( user_id, add_me_to_user = true )
-        raise Exceptions::RoomInvalidUser unless Users.exists?( user_id )
+        raise Exceptions::UserInvalid unless Users.exists?( user_id )
         unless users.include?( user_id )
           @users << user_id
           Users[user_id].add_room( @id, false ) if add_me_to_user
@@ -65,6 +67,12 @@ module Pangit
       def card_set=( card_set )
         raise Exceptions::CardSetIDInvalid unless CardSets.exists?( card_set )
         return @card_set = card_set
+      end
+
+      def choose_card( user_id, card_id )
+        raise Exceptions::UserInvalid unless Users.exists?( user_id ) and @users.include?( user_id )
+        raise Exceptions::CardInvalid unless CardSets.exists?( @card_set ) and CardSets[@card_set].valid?( card_id )
+        @choices[user_id] = card_id
       end
     end
   end

@@ -11,12 +11,12 @@ module Pangit
     class UserSessionIDAlreadyExists < PangitException; end
     class UserNameInvalid < PangitException; end
     class UserSessionIDInvalid < PangitException; end
+		class UserInvalid < PangitException; end
 
     # Rooms Exceptions
     class RoomIDAlreadyExists < PangitException; end
-		class RoomIDInvalid < PangitException; end
-		class RoomNameInvalid < PangitException; end
-		class RoomInvalidUser < PangitException; end
+    class RoomIDInvalid < PangitException; end
+    class RoomNameInvalid < PangitException; end
 
     # CardSet Exceptions
     class CardSetInvalidType < PangitException; end
@@ -25,5 +25,6 @@ module Pangit
     class CardSetIDInvalid < PangitException; end
     class CardSetNameInvalid < PangitException; end
     class CardSetIDAlreadyExists < PangitException; end
+    class CardInvalid < PangitException; end
 	end
 end

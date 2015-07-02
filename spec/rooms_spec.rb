@@ -139,10 +139,14 @@ describe Pangit::Models::Room do
     end
   end
 
+  describe '#choices' do
+    it( 'has choices' ) { expect( test_room.choices ).to be_a( Hash ) }
+  end
+
   describe '.add_user' do
     let( :existing_user ) { 'existing_user' }
     let( :invalid_user ) { :invalid_user }
-    let( :room_invalid_user ) { Pangit::Exceptions::RoomInvalidUser }
+    let( :user_invalid ) { Pangit::Exceptions::UserInvalid }
 
     it( 'adds a new user' ) do
       users.add_user( user_name, user_name )
@@ -150,7 +154,7 @@ describe Pangit::Models::Room do
       expect( test_room.users.select {|v| v == user_name}.count ).to be( 1 )
       expect( users[user_name].rooms ).to include( id )
     end
-    it( 'errors on invalid user' ) { expect { test_room.add_user( invalid_user ) }.to raise_error( room_invalid_user ) }
+    it( 'errors on invalid user' ) { expect { test_room.add_user( invalid_user ) }.to raise_error( user_invalid ) }
     it( "doesn't add existing user" ) do
       users.add_user( existing_user, existing_user )
       test_room.add_user( existing_user )
@@ -166,6 +170,37 @@ describe Pangit::Models::Room do
       expect( test_room.users.select {|v| v == user_name}.count ).to be( 1 )
       test_room.remove_user( user_name )
       expect( test_room.users.select {|v| v == user_name}.count ).to be( 0 )
+    end
+  end
+
+  describe '.choose_card' do
+    let( :user_id ) { 'user_id' }
+    let( :card_id ) { :card_id }
+    let( :card_set ) { {card_id: 'card_id'} }
+    let( :invalid_card_id ) { :invalid_card_id }
+    let( :user_invalid ) { Pangit::Exceptions::UserInvalid }
+    let( :card_invalid ) { Pangit::Exceptions::CardInvalid }
+
+    it( 'errors on invalid user' ) do
+      expect { test_room.choose_card( user_id, card_id ) }.to raise_error( user_invalid )
+      Pangit::Models::Users.add_user( user_id, user_id )
+      expect { test_room.choose_card( user_id, card_id ) }.to raise_error( user_invalid )
+    end
+    it( 'errors on invalid card' ) do
+      Pangit::Models::Users.add_user( user_id, user_id )
+      test_room.add_user( user_id )
+      expect { test_room.choose_card( user_id, card_id ) }.to raise_error( card_invalid )
+      Pangit::Models::CardSets.add_card_set( card_id, card_id.to_s, card_set )
+      test_room.card_set = card_id
+      expect { test_room.choose_card( user_id, invalid_card_id ) }.to raise_error( card_invalid )
+    end
+    it( 'chooses a valid card for a valid user' ) do
+      Pangit::Models::Users.add_user( user_id, user_id )
+      test_room.add_user( user_id )
+      Pangit::Models::CardSets.add_card_set( card_id, card_id.to_s, card_set )
+      test_room.card_set = card_id
+      test_room.choose_card( user_id, card_id )
+      expect( test_room.choices[user_id] ).to be( card_id )
     end
   end
 end
